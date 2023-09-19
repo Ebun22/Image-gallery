@@ -1,7 +1,9 @@
 'use client'
 import './globals.css';
+import ContextProvider from '@/Context/context';
 import StateContext from '@/Context/context';
-import { Inter } from 'next/font/google'
+import AuthContextProvider from '@/Context/AuthContext';
+import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,9 +16,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <StateContext>
-          {children}
-        </StateContext>
+        <AuthContextProvider>
+          <ContextProvider>
+            {children}
+          </ContextProvider>
+        </AuthContextProvider>
       </body>
     </html>
   )

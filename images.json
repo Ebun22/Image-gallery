@@ -1,0 +1,57 @@
+[
+    {
+      "id": 1,
+      "name": "Image 1",
+      "description": "Description for image 1",
+      "path": "/collection/image1.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Image 2",
+      "description": "Description for image 2",
+      "path": "/collection/image2.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Image 3",
+      "description": "Description for image 3",
+      "path": "/collection/image3.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Image 4",
+        "description": "Description for image 4",
+        "path": "/collection/image4.jpg"
+      },
+      {
+        "id": 5,
+        "name": "Image 5",
+        "description": "Description for image 5",
+        "path": "/collection/image5.jpg"
+      },
+      {
+        "id": 6,
+        "name": "Image 6",
+        "description": "Description for image 6",
+        "path": "/collection/image6.jpg"
+      },
+      {
+        "id": 7,
+        "name": "Image 7",
+        "description": "Description for image 7",
+        "path": "/collection/image7.jpg"
+      },
+      {
+        "id": 8,
+        "name": "Image 8",
+        "description": "Description for image 8",
+        "path": "/collection/image8.jpg"
+      },
+      {
+        "id": 9,
+        "name": "Image 9",
+        "description": "Description for image 9",
+        "path": "/collection/image9.jpg"
+      }
+    
+  ]

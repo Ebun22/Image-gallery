@@ -1,24 +1,30 @@
 import React, { createContext, useContext, useState, useEffect, Children } from 'react';
 
-const ConsumerContext = createContext(null);
+const StateContext = createContext(null);
 
 export const useStateContext = () => {
-    const store = useContext(ConsumerContext);
+    const store = useContext(StateContext);
     if(store === null){
         throw new Error("SOmething is wrong Check, data is null");
     }
     return store
 }
 
-const StateContext = ({children}) => {
+const ContextProvider = ({children}) => {
     const [hasAccount, setHasAccount] = useState(false);
+   const [loading, setLoading] = useState(false); 
+    const [error, setError] = useState('');
 
     const value = {
         hasAccount, 
         setHasAccount,
+        error, 
+        setError,
+        loading, 
+        setLoading,
     }
 
-    return <ConsumerContext.Provider value={value}> {children} </ConsumerContext.Provider>
+    return <StateContext.Provider value={value}> {children} </StateContext.Provider>
 }
 
-export default StateContext;
+export default ContextProvider;
