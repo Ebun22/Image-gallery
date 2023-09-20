@@ -14,6 +14,7 @@ const ContextProvider = ({children}) => {
     const [hasAccount, setHasAccount] = useState(false);
    const [loading, setLoading] = useState(false); 
     const [error, setError] = useState('');
+    const [search, setSearch] = useState('')
 
     const value = {
         hasAccount, 
@@ -22,6 +23,8 @@ const ContextProvider = ({children}) => {
         setError,
         loading, 
         setLoading,
+        search, 
+        setSearch,
     }
 
     return <StateContext.Provider value={value}> {children} </StateContext.Provider>

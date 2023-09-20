@@ -8,14 +8,21 @@ import { Navbar } from '../components';
 import images from '../../../images';
 
 function Home() {
-    const { error, setError, loading, setLoading } = useStateContext()
+    const { error, setError, loading, setLoading, search, setSearch } = useStateContext()
     const { signup, currentUser } = UseAuthContext();
     const [newImages, setNewImages] = useState();
 
     const dragItem = useRef();
     const dragOverItem = useRef();
-    console.log("this is the item being dragged", dragItem)
-    console.log("this is the item being dragged over", dragOverItem)
+
+    useEffect(() => {
+        setNewImages(images)
+    }, [])
+
+    //function to convert capitalize any word
+    const capitalize = (word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
 
     //handle rearrangment of images
     const handleSort = () => {
@@ -26,15 +33,31 @@ function Home() {
 
         //remove and save the dragged content
         //i.e at position dragItem, remove 1 element which would be the dragged item
-        console.log(newImageArray.splice(dragItem.current, 1)[0])
-    }
-    useEffect(() => {
-        handleSort()
-    }, [])
+        const draggedItem = newImageArray.splice(dragItem.current, 1)[0]
 
-    
-    const handleDragEnd = () => {
-        console.log("This is DragEnd")
+        //modifies the duplicate list generated and adds dragged item to new position
+        newImageArray.splice(dragOverItem.current, 0, draggedItem);
+
+        // resets the refs
+        dragItem.current = null;
+        dragOverItem.current = null;
+
+        setNewImages(newImageArray)
+    }
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setSearch(value.trim())
+
+        if (value.trim() === "") {
+            setNewImages(images);
+        } else {
+            const searchedData = newImages.filter(item => (item.description.includes(capitalize(search) || search)))
+
+            setNewImages(searchedData);
+        }
+
+        console.log(newImages)
     }
 
     return (
@@ -47,21 +70,27 @@ function Home() {
                 </div>
 
                 <div >
-                    <input type='text' placeholder='Search' className='bg-tarnspartent p-2 border-2 border-slate-300 rounded-lg mt-4' />
+                    <input
+                        type='text'
+                        placeholder='Search'
+                        className='bg-tarnspartent p-2 border-2 border-slate-300 rounded-lg mt-4'
+                        onChange={(e) => handleSearch(e)}
+                    />
                     <p className='absolute z-10 mt-2 top-32 bottom-0 right-6 w-4 h-4 flex justify-end'>
                         <AiOutlineSearch />
                     </p>
                 </div>
             </div>
             <div className='grid grid-cols-4 gap-4 w-full h-full my-6 '>
-                {images.map((item, index) => (
+                {newImages?.map((item, index) => (
                     <div
                         key={index}
-                        className='h-64 w-full'
+                        className='relative h-64 w-full group'
                         draggable
-                        onDragStart={(e) => dragItem.current = index}
-                        onDragEnter={(e) => dragOverItem.current = index}
-                        onDragEnd={handleDragEnd}
+                        onDragStart={() => dragItem.current = index}
+                        onDragEnter={() => dragOverItem.current = index}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDragEnd={handleSort}
 
                     >
                         <Image
@@ -71,6 +100,9 @@ function Home() {
                             src={item.path}
                             className='w-full h-full'
                         />
+                        <p className="absolute bottom-0 bg-black w-full p-1 text-white text-sm text-center">
+                            {item.description}
+                        </p>
                     </div>
                 ))}
             </div>
