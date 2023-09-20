@@ -7,11 +7,17 @@ import { UseAuthContext } from '@/Context/AuthContext';
 import { useStateContext } from '@/Context/context';
 import { ImageSkeleton, Navbar } from '../components';
 import images from '../../../images';
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { SortableImages } from '../components/SortableImages';
 
 function Home() {
     const { error, setError, loading, setLoading, search, setSearch } = useStateContext()
     const { signup, currentUser } = UseAuthContext();
     const [newImages, setNewImages] = useState();
+    const [dragStart, setDragStart] = useState(false);
 
     const dragItem = useRef();
     const dragOverItem = useRef();
@@ -27,6 +33,9 @@ function Home() {
 
     //handle rearrangment of images
     const handleSort = () => {
+
+        setDragStart(false)
+
         //create a duplicate list
         const newImageArray = [...images]
         // setNewImages(images)
@@ -44,7 +53,14 @@ function Home() {
         dragOverItem.current = null;
 
         setNewImages(newImageArray)
+
     }
+
+    // const onDragStart = (e, index) => {
+    //     e.dataTransfer.setData('index', index);
+    //     setDragStart(true)
+    //     dragItem.current = index
+    // }
 
     const handleSearch = (e) => {
         const value = e.target.value;
@@ -54,7 +70,6 @@ function Home() {
             setNewImages(images);
         } else {
             const searchedData = newImages.filter(item => (item.description.includes(capitalize(search) || search)))
-
             setNewImages(searchedData);
         }
 
@@ -82,36 +97,23 @@ function Home() {
                     </p>
                 </div>
             </div>
-            <div className='grid grid-cols-4 gap-4 w-full h-full my-6 '>
-                {newImages ? (
-                     newImages.map((item, index) => (
-                        <div
-                            key={index}
-                            className='relative h-64 w-full group'
-                            draggable
-                            onDragStart={() => dragItem.current = index}
-                            onDragEnter={() => dragOverItem.current = index}
-                            onDragOver={(e) => e.preventDefault()}
-                            onDragEnd={handleSort}
-
-                        >
-                            <Image
-                                width={250}
-                                height={250}
-                                alt={item.name}
-                                src={item.path}
-                                className='w-full h-full'
-                            />
-                            <p className="absolute bottom-0 bg-black w-full p-1 text-white text-sm text-center">
-                                {item.description}
-                            </p>
-                        </div>
-                    ))
-                ) :
-                <ImageSkeleton cards={images.length} /> 
-          }
-
-            </div>
+            <DndContext
+                collisionDetection={closestCenter}
+                onDragEnd={handleSort}
+            >
+                <div className='grid grid-cols-4 gap-4 w-full h-full my-6 '>
+                    {
+                        newImages ?
+                            <SortableContext
+                                items={newImages}
+                            >
+                                {newImages.map((item, index) => <SortableImages key={index} id={item} />)}
+                            </SortableContext>
+                            :
+                            <ImageSkeleton cards={images.length} />
+                    }
+                </div>
+            </DndContext>
         </div>
     )
 }
