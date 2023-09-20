@@ -1,10 +1,11 @@
 'use client'
 import Image from 'next/image'
 import React, { useState, useRef, useEffect } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai'
+import { AiOutlineSearch } from 'react-icons/ai';
+import Skeleton from "react-skeleton";
 import { UseAuthContext } from '@/Context/AuthContext';
 import { useStateContext } from '@/Context/context';
-import { Navbar } from '../components';
+import { ImageSkeleton, Navbar } from '../components';
 import images from '../../../images';
 
 function Home() {
@@ -82,29 +83,34 @@ function Home() {
                 </div>
             </div>
             <div className='grid grid-cols-4 gap-4 w-full h-full my-6 '>
-                {newImages?.map((item, index) => (
-                    <div
-                        key={index}
-                        className='relative h-64 w-full group'
-                        draggable
-                        onDragStart={() => dragItem.current = index}
-                        onDragEnter={() => dragOverItem.current = index}
-                        onDragOver={(e) => e.preventDefault()}
-                        onDragEnd={handleSort}
+                {newImages ? (
+                     newImages.map((item, index) => (
+                        <div
+                            key={index}
+                            className='relative h-64 w-full group'
+                            draggable
+                            onDragStart={() => dragItem.current = index}
+                            onDragEnter={() => dragOverItem.current = index}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDragEnd={handleSort}
 
-                    >
-                        <Image
-                            width={250}
-                            height={250}
-                            alt={item.name}
-                            src={item.path}
-                            className='w-full h-full'
-                        />
-                        <p className="absolute bottom-0 bg-black w-full p-1 text-white text-sm text-center">
-                            {item.description}
-                        </p>
-                    </div>
-                ))}
+                        >
+                            <Image
+                                width={250}
+                                height={250}
+                                alt={item.name}
+                                src={item.path}
+                                className='w-full h-full'
+                            />
+                            <p className="absolute bottom-0 bg-black w-full p-1 text-white text-sm text-center">
+                                {item.description}
+                            </p>
+                        </div>
+                    ))
+                ) :
+                <ImageSkeleton cards={images.length} /> 
+          }
+
             </div>
         </div>
     )
